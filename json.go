@@ -29,6 +29,5 @@ func respondWithError(r http.ResponseWriter, code int, message string) {
 	respondWithJson(r, code, ErrorResponse{
 		Error: message,
 		Code:  code,
-		Data:  struct{}{},
 	})
 }

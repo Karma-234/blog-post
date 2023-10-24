@@ -9,10 +9,18 @@ import (
 
 type User struct {
 	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"createdAt`
+	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 	Name      string    `json:"name"`
 	ApiKey    string    `json:"apiKey"`
+}
+type Feed struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Name      string    `json:"name"`
+	URL       string    `json:"url"`
+	UserId    uuid.UUID `json:"userId"`
 }
 
 func dataBaseUser(dbUser database.User) User {
@@ -29,4 +37,15 @@ type AppBaseResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 	Data    any    `json:"data"`
+}
+
+func dataBaseFeed(dbUser database.Feed) Feed {
+	return Feed{
+		ID:        dbUser.ID,
+		CreatedAt: dbUser.CreatedAt,
+		UpdatedAt: dbUser.UpdatedAt,
+		Name:      dbUser.Name,
+		URL:       dbUser.Url,
+		UserId:    dbUser.UserID,
+	}
 }

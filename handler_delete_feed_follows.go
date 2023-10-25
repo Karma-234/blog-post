@@ -1,33 +1,29 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/google/uuid"
 	"github.com/karma-234/blog-post/internal/database"
 )
 
 func (apiCfg *apiConfig) handlerDeleteFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
-	type parameters struct {
-		FeedID uuid.UUID `json:"feedID"`
-	}
 
-	decoder := json.NewDecoder(r.Body)
-	params := parameters{}
-	err := decoder.Decode(&params)
+	followID := chi.URLParam(r, "feedFollowId")
+	feedUUID, err := uuid.Parse(followID)
 
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Error parsing path: %v", err))
 		return
 	}
 	deleteError := apiCfg.DB.DeleteFeedFollow(r.Context(), database.DeleteFeedFollowParams{
-		FeedID: params.FeedID,
+		ID:     feedUUID,
 		UserID: user.ID,
 	})
 	if deleteError != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't delete feed: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldn't delete feed follow: %v", err))
 		return
 	}
 	resp := AppBaseResponse{}
